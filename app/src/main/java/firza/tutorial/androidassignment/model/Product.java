@@ -1,5 +1,8 @@
 package firza.tutorial.androidassignment.model;
 
+import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class Product {
@@ -65,5 +68,11 @@ public class Product {
 
     public void setInChart(Integer inChart) {
         this.inChart = inChart;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

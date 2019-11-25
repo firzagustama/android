@@ -1,10 +1,15 @@
 package firza.tutorial.androidassignment;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -12,18 +17,23 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import firza.tutorial.androidassignment.adapter.ProductAdapter;
 import firza.tutorial.androidassignment.model.Product;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R2.id.grid_view)
     GridView gridView;
+
+    @BindView(R2.id.btn_chart)
+    ImageButton btnCart;
 
     private Api api;
 
@@ -53,29 +63,25 @@ public class MainActivity extends AppCompatActivity {
         api.getAllProduct()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Product>>() {
+                .subscribe(new Consumer<List<Product>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<Product> products) {
+                    public void accept(List<Product> products) throws Exception {
                         showLoading(false);
                         gridView.setAdapter(new ProductAdapter(products));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
     }
 
+    public void setEnabledCartButton(Boolean bool) {
+        Integer resource = bool ? R.drawable.btn_info : R.drawable.btn_disabled;
+        btnCart.setEnabled(bool);
+        btnCart.setBackgroundResource(resource);
+    }
+
+    @OnClick(R2.id.btn_chart)
+    public void openCartActivity() {
+        Intent intent = CartActivity.getStartIntent(this);
+        startActivity(intent);
+    }
 
 }
