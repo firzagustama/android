@@ -3,6 +3,7 @@ package firza.tutorial.androidassignment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
         showProduct();
     }
 
+    public static Intent getStartIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
+    }
+
     public void showLoading(Boolean bool) {
         if (bool) setContentView(R.layout.activity_loading);
         else      {
@@ -59,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showProduct() {
+        String productsJson = getIntent().getStringExtra("products");
+        if (productsJson != null) {
+            Product[] products = new Gson().fromJson(productsJson, Product[].class);
+            List<Product> productList = Arrays.asList(products);
+            gridView.setAdapter(new ProductAdapter(productList));
+            return;
+        }
+
         showLoading(true);
         api.getAllProduct()
                 .subscribeOn(Schedulers.io())

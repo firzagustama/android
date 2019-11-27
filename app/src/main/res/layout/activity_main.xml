@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="@color/bgLayout"
-    android:padding="10dp"
     android:id="@+id/container"
     android:orientation="vertical">
 
@@ -30,8 +29,6 @@
         android:paddingTop="16dp"
         android:scrollbars="none"
         tools:listitem="@layout/grid_product">
-
-
     </GridView>
 
 
